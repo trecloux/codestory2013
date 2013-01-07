@@ -25,13 +25,15 @@ public class WebServer {
     }
 
     private int getPort() {
-        String port = System.getenv("PORT");
-        if (port == null) {
-            return 9090;
+        String portEnv = System.getenv("PORT");
+        int port;
+        if (portEnv == null) {
+            port = 9090;
         } else {
-            return Integer.parseInt(port);
+            port = Integer.parseInt(portEnv);
         }
-
+        log.info("Application will try to start on port " + port);
+        return port;
     }
 
     public void stop() {
