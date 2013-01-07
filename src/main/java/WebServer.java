@@ -19,6 +19,7 @@ public class WebServer {
     public WebServer () {
         try {
             httpServer = SimpleServerFactory.create("http://localhost:"+ getPort(), new DefaultResourceConfig(Resource.class));
+            log.info("WebServer started. java.runtime.version : {}", System.getProperty("java.runtime.version"));
         } catch (IOException e) {
             log.error("Could not start WebServer", e);
         }
@@ -32,7 +33,7 @@ public class WebServer {
         } else {
             port = Integer.parseInt(portEnv);
         }
-        log.info("Application will try to start on port " + port);
+        log.info("WebServer will try to start on port {} ", port);
         return port;
     }
 
