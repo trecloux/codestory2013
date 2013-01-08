@@ -16,9 +16,19 @@ public class WebServer {
     public static void main(String [] args) {
         new WebServer();
     }
-    public WebServer () {
+
+    public WebServer() {
+        start(getPort());
+    }
+
+    public WebServer (int port) {
+        start(port);
+    }
+
+    private void start(int port) {
         try {
-            httpServer = SimpleServerFactory.create("http://localhost:"+ getPort(), new DefaultResourceConfig(Resource.class));
+            log.info("WebServer will try to start on port {} ", port);
+            httpServer = SimpleServerFactory.create("http://localhost:" + port, new DefaultResourceConfig(Resource.class));
             log.info("WebServer started. java.runtime.version : {}", System.getProperty("java.runtime.version"));
         } catch (IOException e) {
             log.error("Could not start WebServer", e);
@@ -27,14 +37,11 @@ public class WebServer {
 
     private int getPort() {
         String portEnv = System.getenv("PORT");
-        int port;
         if (portEnv == null) {
-            port = 9090;
+            return 9090;
         } else {
-            port = Integer.parseInt(portEnv);
+            return Integer.parseInt(portEnv);
         }
-        log.info("WebServer will try to start on port {} ", port);
-        return port;
     }
 
     public void stop() {
