@@ -37,7 +37,8 @@ public class IntegrationTest {
                         .port(webServer.port)
                         .param("q", "Qui va gagner le superball")
                         .get("/").asString();
-        assertThat(content).contains("question");
+        assertThat(content).contains("répéter");
+
     }
 
     @Test

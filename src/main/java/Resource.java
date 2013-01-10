@@ -7,13 +7,13 @@ import javax.ws.rs.QueryParam;
 public class Resource {
 
     @GET
-    @Produces("text/plain")
+    @Produces("text/plain;charset=utf-8")
     public String getAnswer(@QueryParam("q") String question) {
         if ("Quelle est ton adresse email".equals(question)) {
             return "tometjerem@gmail.com";
         } else if ("Es tu abonne a la mailing list(OUI/NON)".equals(question)) {
             return "OUI";
-            } else if ("ping".equals(question)) {
+        } else if ("ping".equals(question)) {
             return "OK";
         } else {
             return "Vous pouvez répéter la question ?";
