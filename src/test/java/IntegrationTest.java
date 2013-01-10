@@ -20,4 +20,34 @@ public class IntegrationTest {
 
     }
 
+    @Test
+    public void should_have_subscribed_to_mailing_list() throws Exception {
+        String content =
+                given()
+                        .port(webServer.port)
+                        .param("q", "Es tu abonne a la mailing list(OUI/NON)")
+                        .get("/").asString();
+        assertThat(content).isEqualTo("OUI");
+    }
+
+    @Test
+    public void should_ask_to_repeat_unknown_questions() throws Exception {
+        String content =
+                given()
+                        .port(webServer.port)
+                        .param("q", "Qui va gagner le superball")
+                        .get("/").asString();
+        assertThat(content).contains("question");
+    }
+
+    @Test
+    public void should_ping() throws Exception {
+        String content =
+                given()
+                        .port(webServer.port)
+                        .param("q", "ping")
+                        .get("/").asString();
+        assertThat(content).isEqualTo("OK");
+    }
+
 }
