@@ -25,6 +25,11 @@ public class IntegrationTest {
     }
 
     @Test
+    public void should_not_be_always_yes() throws Exception {
+        assertThatAnswerIs("Est ce que tu reponds toujours oui(OUI/NON)", "NON");
+    }
+
+    @Test
     public void should_ask_to_repeat_unknown_questions() throws Exception {
         assertThatAnswerIs("Qui va gagner le superball", "Vous pouvez répéter la question ?");
     }
