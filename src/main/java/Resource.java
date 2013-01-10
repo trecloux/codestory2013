@@ -11,7 +11,7 @@ public class Resource {
     public String getAnswer(@QueryParam("q") String question) {
         if ("Quelle est ton adresse email".equals(question)) {
             return "tometjerem@gmail.com";
-        } else if ("Es tu abonne a la mailing list(OUI/NON)".equals(question)) {
+        } else if (question.startsWith("Es tu")) {
             return "OUI";
         } else if ("ping".equals(question)) {
             return "OK";
