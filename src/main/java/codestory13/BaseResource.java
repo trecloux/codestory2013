@@ -76,7 +76,7 @@ public class BaseResource {
 
     private Optional<String> formula(String question) {
         try {
-            String formula = question.replaceAll(" ", "+");
+            String formula = question.replaceAll(" ", "+").replaceAll(",",".");
             ScriptEngineManager factory = new ScriptEngineManager();
             ScriptEngine engine = factory.getEngineByName("Groovy");
             Object result = engine.eval(formula);

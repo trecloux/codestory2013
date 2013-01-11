@@ -132,6 +132,7 @@ public class IntegrationTest {
         assertThatAnswerIs("(1 2)*2", "6");
         assertThatAnswerIs("(1+2)/2", "1,5");
         assertThatAnswerIs("((1 2) 3 4 (5 6 7) (8 9 10)*3)/2*5", "272,5");
+        assertThatAnswerIs("1,5*4", "6");
     }
 
 
