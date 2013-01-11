@@ -33,30 +33,26 @@ public class ScalaskelResource {
     }
 
     private List<Map<Coin, Integer>> notOnlyFooCombinaisons(int totalToGet, List<Coin> coins) {
-        Coin biggestAvailableCoin = coins.get(0);
-        int numberOfbiggestAvailableCoin = 0;
         List<Map<Coin, Integer>> combinaisons = new ArrayList<>();
-        boolean higherThanTotalToGet = false;
-        while (! higherThanTotalToGet) {
-            int remainingCents = totalToGet - (numberOfbiggestAvailableCoin * biggestAvailableCoin.centValue);
-            if (remainingCents == 0) {
-                combinaisons.add(oneElementCombinaison(biggestAvailableCoin, numberOfbiggestAvailableCoin));
+        Coin currentCoin = coins.get(0);
+        int currentValue = currentCoin.value;
+        int maxNbOfCurrentCoin = totalToGet / currentValue;
+        for (int nbOfCurrentCoin = 0; nbOfCurrentCoin <= maxNbOfCurrentCoin; nbOfCurrentCoin++) {
+            int remaining = totalToGet - (nbOfCurrentCoin * currentValue);
+            if (remaining == 0) {
+                combinaisons.add(oneElementCombinaison(currentCoin, nbOfCurrentCoin));
             } else {
-                List<Map<Coin, Integer>> subCombinaisons = combinaisons(remainingCents, coins.subList(1, coins.size()));
-                addBigCoinsToSubCombinaisons(biggestAvailableCoin, numberOfbiggestAvailableCoin, subCombinaisons);
+                List<Map<Coin, Integer>> subCombinaisons = combinaisons(remaining, coins.subList(1, coins.size()));
+                addCombinaison(currentCoin, nbOfCurrentCoin, subCombinaisons);
                 combinaisons.addAll(subCombinaisons);
             }
-            numberOfbiggestAvailableCoin ++;
-            higherThanTotalToGet = numberOfbiggestAvailableCoin * biggestAvailableCoin.centValue > totalToGet;
         }
         return combinaisons;
     }
 
-    private void addBigCoinsToSubCombinaisons(Coin biggestAvailableCoin, int numberOfbiggestAvailableCoin, List<Map<Coin, Integer>> subCombinaisons) {
-        if (numberOfbiggestAvailableCoin > 0) {
-            for (Map<Coin, Integer> combinaison : subCombinaisons) {
-                combinaison.put(biggestAvailableCoin, numberOfbiggestAvailableCoin);
-            }
+    private void addCombinaison(Coin coin, int numberCoins, List<Map<Coin, Integer>> combinaisons) {
+        if (numberCoins > 0) {
+            combinaisons.forEach(m -> { m.put(coin, numberCoins); });
         }
     }
 
@@ -76,10 +72,10 @@ public class ScalaskelResource {
         bar(7),
         foo(1);
 
-        final int centValue;
+        final int value;
 
-        Coin(int centValue) {
-            this.centValue = centValue;
+        Coin(int value) {
+            this.value = value;
         }
     }
 }
