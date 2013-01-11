@@ -130,6 +130,7 @@ public class IntegrationTest {
     @Test
     public void should_compute_formula() throws Exception {
         assertThatAnswerIs("(1 2)*2", "6");
+        assertThatAnswerIs("(1+2)/2", "1,5");
     }
 
 

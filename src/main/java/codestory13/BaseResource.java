@@ -16,9 +16,11 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import static com.google.common.base.Optional.absent;
@@ -77,7 +79,12 @@ public class BaseResource {
             String formula = question.replaceAll(" ", "+");
             ScriptEngineManager factory = new ScriptEngineManager();
             ScriptEngine engine = factory.getEngineByName("Groovy");
-            return of(engine.eval(formula).toString());
+            Object result = engine.eval(formula);
+            if (result instanceof Number) {
+                return of(DecimalFormat.getInstance(Locale.FRANCE).format(result));
+            } else {
+                return absent();
+            }
         } catch (ScriptException e) {
             return absent();
         }
