@@ -112,4 +112,10 @@ public class IntegrationTest {
                 .get("/scalaskel/change/8");
     }
 
+    @Test
+    public void should_add() throws Exception {
+        assertThatAnswerIs("1+1", "2");
+    }
+
+
 }

@@ -55,11 +55,19 @@ public class BaseResource {
     public String getAnswer(@QueryParam("q") String question) {
         if (simpleGetResponses.containsKey(question)) {
             return simpleGetResponses.get(question);
-        }
-        if (isUnknownMailKey("question/" + question)) {
+        } else if (question.matches("(\\d+)\\+(\\d+)")) {
+            return add(question);
+        } else if(isUnknownMailKey("question/" + question)) {
             sendEmail("Unknown GET question", question);
         }
         return "Vous pouvez répéter la question ?";
+    }
+
+    private String add(String question) {
+        String[] parts = question.split("\\+");
+        int left = Integer.parseInt(parts[0]);
+        int right = Integer.parseInt(parts[1]);
+        return String.valueOf(left + right);
     }
 
     @POST
