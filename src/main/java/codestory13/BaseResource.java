@@ -16,9 +16,11 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import static com.google.common.base.Optional.absent;
@@ -53,7 +55,6 @@ public class BaseResource {
         simpleGetResponses.put("Es tu heureux de participer(OUI/NON)","OUI");
         simpleGetResponses.put("Est ce que tu reponds toujours oui(OUI/NON)","NON");
         simpleGetResponses.put("As tu bien recu le premier enonce(OUI/NON)","OUI");
-        simpleGetResponses.put("((1 2) 3 4 (5 6 7) (8 9 10)*3)/2*5","270");
         simpleGetResponses.put("ping","OK");
     }
 
@@ -75,10 +76,15 @@ public class BaseResource {
 
     private Optional<String> formula(String question) {
         try {
-            String formula = "(int)" + question.replaceAll(" ", "+");
+            String formula = question.replaceAll(" ", "+");
             ScriptEngineManager factory = new ScriptEngineManager();
             ScriptEngine engine = factory.getEngineByName("Groovy");
-            return of(engine.eval(formula).toString());
+            Object result = engine.eval(formula);
+            if (result instanceof  Number) {
+                return of(DecimalFormat.getInstance(Locale.FRANCE).format(result));
+            } else {
+                return of(result.toString());
+            }
         } catch (ScriptException e) {
             return absent();
         }
