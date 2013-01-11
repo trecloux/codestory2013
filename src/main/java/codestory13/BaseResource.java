@@ -1,5 +1,6 @@
 package codestory13;
 
+import com.google.common.base.Optional;
 import org.codemonkey.simplejavamail.Email;
 import org.codemonkey.simplejavamail.Mailer;
 import org.slf4j.Logger;
@@ -19,10 +20,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
-import static java.util.Optional.empty;
-import static java.util.Optional.of;
+import static com.google.common.base.Optional.absent;
+import static com.google.common.base.Optional.of;
 import static javax.mail.Message.RecipientType.TO;
 import static org.codemonkey.simplejavamail.TransportStrategy.SMTP_TLS;
 
@@ -79,7 +79,7 @@ public class BaseResource {
             ScriptEngine engine = factory.getEngineByName("Groovy");
             return of(engine.eval(formula).toString());
         } catch (ScriptException e) {
-            return empty();
+            return absent();
         }
     }
 
