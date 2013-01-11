@@ -17,6 +17,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -81,7 +82,9 @@ public class BaseResource {
             ScriptEngine engine = factory.getEngineByName("Groovy");
             Object result = engine.eval(formula);
             if (result instanceof  Number) {
-                return of(DecimalFormat.getInstance(Locale.FRANCE).format(result));
+                NumberFormat format = DecimalFormat.getInstance(Locale.FRANCE);
+                format.setGroupingUsed(false);
+                return of(format.format(result));
             } else {
                 return of(result.toString());
             }
