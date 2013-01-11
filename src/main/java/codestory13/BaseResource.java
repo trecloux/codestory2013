@@ -18,11 +18,9 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import static com.google.common.base.Optional.absent;
@@ -63,7 +61,6 @@ public class BaseResource {
     @GET
     @Produces("text/plain;charset=utf-8")
     public String getAnswer(@QueryParam("q") String question, @Context HttpHeaders headers) {
-        printHeaders(headers);
         if (simpleGetResponses.containsKey(question)) {
             return simpleGetResponses.get(question);
         } else {
@@ -77,24 +74,12 @@ public class BaseResource {
         return "Vous pouvez répéter la question ?";
     }
 
-    private void printHeaders(HttpHeaders headers) {
-        headers.getRequestHeaders().forEach((k, v) -> {
-            System.out.printf("Header %s: %s\n", k, v);
-        });
-
-    }
-
     private Optional<String> formula(String question) {
         try {
-            String formula = question.replaceAll(" ", "+");
+            String formula = "(int)" + question.replaceAll(" ", "+");
             ScriptEngineManager factory = new ScriptEngineManager();
             ScriptEngine engine = factory.getEngineByName("Groovy");
-            Object result = engine.eval(formula);
-            if (result instanceof Number) {
-                return of(DecimalFormat.getInstance(Locale.FRANCE).format(result));
-            } else {
-                return absent();
-            }
+            return of(engine.eval(formula).toString());
         } catch (ScriptException e) {
             return absent();
         }
