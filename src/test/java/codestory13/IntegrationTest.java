@@ -1,3 +1,5 @@
+package codestory13;
+
 import org.codemonkey.simplejavamail.Email;
 import org.codemonkey.simplejavamail.Mailer;
 import org.junit.Before;
@@ -16,7 +18,7 @@ public class IntegrationTest {
 
     @Before
     public void setUp() throws Exception {
-        Resource.mailer = mock(Mailer.class);
+        BaseResource.mailer = mock(Mailer.class);
     }
 
     @Test
@@ -53,20 +55,20 @@ public class IntegrationTest {
     public void should_send_email_once_on_unknown_get_question() throws Exception {
         given().port(webServer.port).param("q", "Comment je m'appelle ?").get("/");
         given().port(webServer.port).param("q", "Comment je m'appelle ?").get("/");
-        verify(Resource.mailer, times(1)).sendMail(any(Email.class));
+        verify(BaseResource.mailer, times(1)).sendMail(any(Email.class));
     }
 
     @Test
     public void should_send_email_once_on_unknown_post_subjects() throws Exception {
         given().port(webServer.port).body("Hey body").post("/enonce/1");
         given().port(webServer.port).body("Hey body").post("/enonce/1");
-        verify(Resource.mailer, times(1)).sendMail(any(Email.class));
+        verify(BaseResource.mailer, times(1)).sendMail(any(Email.class));
     }
 
 
     @Test
     public void should_not_fail_on_email_failure() throws Exception {
-        doThrow(new RuntimeException("Plouf")).when(Resource.mailer).sendMail(any(Email.class));
+        doThrow(new RuntimeException("Plouf")).when(BaseResource.mailer).sendMail(any(Email.class));
         given().port(webServer.port).param("q", "Comment je m'appelle ?").get("/");
     }
 
@@ -96,4 +98,18 @@ public class IntegrationTest {
                         .get("/").asString();
         assertThat(content).isEqualTo(answer);
     }
+
+    @Test
+    public void should_compute_scalaskel_for_8() throws Exception {
+        System.out.println(given()
+                .port(webServer.port)
+//        .expect()
+//                .body("[0].bar", equalTo(1))
+//                .body("[0].foo", equalTo(1))
+//                .body("[1].foo", equalTo(8))
+        .when()
+                .get("/scalaskel/change/8").asString());
+
+    }
+
 }

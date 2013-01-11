@@ -1,3 +1,5 @@
+package codestory13;
+
 import org.codemonkey.simplejavamail.Email;
 import org.codemonkey.simplejavamail.Mailer;
 import org.slf4j.Logger;
@@ -19,15 +21,15 @@ import static javax.mail.Message.RecipientType.TO;
 import static org.codemonkey.simplejavamail.TransportStrategy.SMTP_TLS;
 
 @Path("/")
-public class Resource {
+public class BaseResource {
 
-    private Logger logger = LoggerFactory.getLogger(Resource.class);
+    private Logger logger = LoggerFactory.getLogger(BaseResource.class);
     static Mailer mailer;
     static List<String> knownMailKeys = new ArrayList<>();
     private Map<String, String> simpleGetResponses = new HashMap<>();
     
 
-    public Resource() {
+    public BaseResource() {
         initializeSimpleGetResponses();
         initializeMailer();
     }

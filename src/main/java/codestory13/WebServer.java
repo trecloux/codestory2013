@@ -1,5 +1,8 @@
+package codestory13;
+
 import com.sun.jersey.api.core.DefaultResourceConfig;
 import com.sun.jersey.simple.container.SimpleServerFactory;
+import org.codehaus.jackson.jaxrs.JacksonJsonProvider;
 import org.slf4j.Logger;
 
 import java.io.Closeable;
@@ -28,7 +31,7 @@ public class WebServer {
     private void start(int port) {
         try {
             log.info("WebServer will try to start on port {} ", port);
-            httpServer = SimpleServerFactory.create("http://localhost:" + port, new DefaultResourceConfig(Resource.class));
+            httpServer = SimpleServerFactory.create("http://localhost:" + port, new DefaultResourceConfig(BaseResource.class, ScalaskelResource.class, JacksonJsonProvider.class));
             log.info("WebServer started. java.runtime.version : {}", System.getProperty("java.runtime.version"));
         } catch (IOException e) {
             log.error("Could not start WebServer", e);

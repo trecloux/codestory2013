@@ -1,12 +1,14 @@
+package codestory13;
+
 import org.junit.Test;
 
 import static org.fest.assertions.Assertions.assertThat;
 
-public class ResourceTest {
+public class BaseResourceTest {
 
     @Test
     public void should_initialize_mailer() throws Exception {
-        new Resource();
-        assertThat(Resource.mailer).isNotNull();
+        new BaseResource();
+        assertThat(BaseResource.mailer).isNotNull();
     }
 }

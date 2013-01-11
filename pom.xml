@@ -11,6 +11,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <slf4j.version>1.7.2</slf4j.version>
+        <jersey.version>1.4</jersey.version>
     </properties>
 
     <build>
@@ -62,8 +63,14 @@
         <dependency>
             <groupId>com.sun.jersey.contribs</groupId>
             <artifactId>jersey-simple-server</artifactId>
-            <version>1.4</version>
+            <version>${jersey.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.sun.jersey</groupId>
+            <artifactId>jersey-json</artifactId>
+            <version>${jersey.version}</version>
+        </dependency>
+
         <dependency>
             <groupId>org.codemonkey.simplejavamail</groupId>
             <artifactId>simple-java-mail</artifactId>
