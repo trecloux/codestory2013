@@ -8,6 +8,7 @@ import org.junit.Test;
 
 import static com.jayway.restassured.RestAssured.given;
 import static org.fest.assertions.Assertions.assertThat;
+import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 
@@ -101,15 +102,14 @@ public class IntegrationTest {
 
     @Test
     public void should_compute_scalaskel_for_8() throws Exception {
-        System.out.println(given()
+        given()
                 .port(webServer.port)
-//        .expect()
-//                .body("[0].bar", equalTo(1))
-//                .body("[0].foo", equalTo(1))
-//                .body("[1].foo", equalTo(8))
+        .expect()
+                .body("get(1).bar", equalTo(1))
+                .body("get(1).foo", equalTo(1))
+                .body("get(0).foo", equalTo(8))
         .when()
-                .get("/scalaskel/change/8").asString());
-
+                .get("/scalaskel/change/8");
     }
 
 }
