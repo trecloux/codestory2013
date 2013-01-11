@@ -15,8 +15,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -55,12 +53,13 @@ public class BaseResource {
         simpleGetResponses.put("Es tu heureux de participer(OUI/NON)","OUI");
         simpleGetResponses.put("Est ce que tu reponds toujours oui(OUI/NON)","NON");
         simpleGetResponses.put("As tu bien recu le premier enonce(OUI/NON)","OUI");
+        simpleGetResponses.put("((1 2) 3 4 (5 6 7) (8 9 10)*3)/2*5","270");
         simpleGetResponses.put("ping","OK");
     }
 
     @GET
     @Produces("text/plain;charset=utf-8")
-    public String getAnswer(@QueryParam("q") String question, @Context HttpHeaders headers) {
+    public String getAnswer(@QueryParam("q") String question) {
         if (simpleGetResponses.containsKey(question)) {
             return simpleGetResponses.get(question);
         } else {
