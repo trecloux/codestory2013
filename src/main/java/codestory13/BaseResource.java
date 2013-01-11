@@ -57,6 +57,10 @@ public class BaseResource {
             return simpleGetResponses.get(question);
         } else if (question.matches("(\\d+) (\\d+)")) {
             return add(question);
+        } else if (question.matches("(\\d+)\\*(\\d+)")) {
+            return multiply(question);
+        } else if (question.matches("(\\d+)-(\\d+)")) {
+            return substract(question);
         } else if(isUnknownMailKey("question/" + question)) {
             sendEmail("Unknown GET question", question);
         }
@@ -68,6 +72,20 @@ public class BaseResource {
         int left = Integer.parseInt(parts[0]);
         int right = Integer.parseInt(parts[1]);
         return String.valueOf(left + right);
+    }
+
+    private String multiply(String question) {
+        String[] parts = question.split("\\*");
+        int left = Integer.parseInt(parts[0]);
+        int right = Integer.parseInt(parts[1]);
+        return String.valueOf(left * right);
+    }
+
+    private String substract(String question) {
+        String[] parts = question.split("-");
+        int left = Integer.parseInt(parts[0]);
+        int right = Integer.parseInt(parts[1]);
+        return String.valueOf(left - right);
     }
 
     @POST

@@ -117,5 +117,15 @@ public class IntegrationTest {
         assertThatAnswerIs("1 1", "2");
     }
 
+    @Test
+    public void should_multiply() throws Exception {
+        assertThatAnswerIs("3*3", "9");
+    }
+
+    @Test
+    public void should_substract() throws Exception {
+        assertThatAnswerIs("4-1", "3");
+    }
+
 
 }
