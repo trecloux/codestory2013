@@ -114,7 +114,7 @@ public class IntegrationTest {
 
     @Test
     public void should_add() throws Exception {
-        assertThatAnswerIs("1+1", "2");
+        assertThatAnswerIs("1 1", "2");
     }
 
 
