@@ -44,6 +44,7 @@ public class Resource {
         simpleGetResponses.put("Es tu abonne a la mailing list(OUI/NON)","OUI");
         simpleGetResponses.put("Es tu heureux de participer(OUI/NON)","OUI");
         simpleGetResponses.put("Est ce que tu reponds toujours oui(OUI/NON)","NON");
+        simpleGetResponses.put("As tu bien recu le premier enonce(OUI/NON)","OUI");
         simpleGetResponses.put("ping","OK");
     }
 

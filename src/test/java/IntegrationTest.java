@@ -40,6 +40,11 @@ public class IntegrationTest {
     }
 
     @Test
+    public void should_have_received_subject_1() throws Exception {
+        assertThatAnswerIs("As tu bien recu le premier enonce(OUI/NON)", "OUI");
+    }
+
+    @Test
     public void should_ask_to_repeat_unknown_questions() throws Exception {
         assertThatAnswerIs("Qui va gagner le superball", "Vous pouvez répéter la question ?");
     }
