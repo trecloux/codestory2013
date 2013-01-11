@@ -10,17 +10,19 @@ import static com.google.common.base.Throwables.propagate;
 public class WebServerRule extends ExternalResource {
 
     WebServer webServer;
-    final int port;
-
-    public WebServerRule() {
-        port = getNextAvailablePort();
-    }
+    int port;
 
     @Override
     protected void before() throws Throwable {
-        if (webServer == null) {
-            webServer = new WebServer(port);
-        }
+        port = getNextAvailablePort();
+        webServer = new WebServer(port);
+    }
+
+    @Override
+    protected void after() {
+        webServer.stop();
+        webServer = null;
+        port = -1;
     }
 
     private int getNextAvailablePort() {

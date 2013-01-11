@@ -3,7 +3,7 @@ package codestory13;
 import org.codemonkey.simplejavamail.Email;
 import org.codemonkey.simplejavamail.Mailer;
 import org.junit.Before;
-import org.junit.Rule;
+import org.junit.ClassRule;
 import org.junit.Test;
 
 import static com.jayway.restassured.RestAssured.given;
@@ -14,8 +14,8 @@ import static org.mockito.Mockito.*;
 
 public class IntegrationTest {
 
-    @Rule
-    public WebServerRule webServer = new WebServerRule();
+    @ClassRule
+    public static WebServerRule webServer = new WebServerRule();
 
     @Before
     public void setUp() throws Exception {
