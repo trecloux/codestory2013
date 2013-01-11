@@ -1,13 +1,23 @@
+import org.codemonkey.simplejavamail.Email;
+import org.codemonkey.simplejavamail.Mailer;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
 import static com.jayway.restassured.RestAssured.given;
 import static org.fest.assertions.Assertions.assertThat;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.*;
 
 public class IntegrationTest {
 
     @Rule
     public WebServerRule webServer = new WebServerRule();
+
+    @Before
+    public void setUp() throws Exception {
+        Resource.mailer = mock(Mailer.class);
+    }
 
     @Test
     public void should_get_email() throws Exception {
@@ -35,19 +45,30 @@ public class IntegrationTest {
     }
 
     @Test
+    public void should_send_email_once_on_unknown_get_question() throws Exception {
+        given().port(webServer.port).param("q", "Comment je m'appelle ?").get("/");
+        given().port(webServer.port).param("q", "Comment je m'appelle ?").get("/");
+        verify(Resource.mailer, times(1)).sendMail(any(Email.class));
+    }
+
+    @Test
+    public void should_send_email_once_on_unknown_post_subjects() throws Exception {
+        given().port(webServer.port).body("Hey body").post("/enonce/1");
+        given().port(webServer.port).body("Hey body").post("/enonce/1");
+        verify(Resource.mailer, times(1)).sendMail(any(Email.class));
+    }
+
+
+    @Test
+    public void should_not_fail_on_email_failure() throws Exception {
+        doThrow(new RuntimeException("Plouf")).when(Resource.mailer).sendMail(any(Email.class));
+        given().port(webServer.port).param("q", "Comment je m'appelle ?").get("/");
+    }
+
+    @Test
     public void should_ping() throws Exception {
         assertThatAnswerIs("ping", "OK");
     }
-
-    private void assertThatAnswerIs(String question, String answer) {
-        String content =
-                given()
-                        .port(webServer.port)
-                        .param("q", question)
-                        .get("/").asString();
-        assertThat(content).isEqualTo(answer);
-    }
-
 
     @Test
     public void should_manage_to_get_enonce1_from_post() throws Exception {
@@ -59,5 +80,15 @@ public class IntegrationTest {
                 when()
                         .post("/enonce/1");
 
+    }
+
+
+    private void assertThatAnswerIs(String question, String answer) {
+        String content =
+                given()
+                        .port(webServer.port)
+                        .param("q", question)
+                        .get("/").asString();
+        assertThat(content).isEqualTo(answer);
     }
 }
