@@ -49,4 +49,15 @@ public class IntegrationTest {
     }
 
 
+    @Test
+    public void should_manage_to_get_enonce1_from_post() throws Exception {
+                given()
+                        .port(webServer.port)
+                        .request().body("*underlined text with markdown*").
+                expect()
+                        .statusCode(201).
+                when()
+                        .post("/enonce/1");
+
+    }
 }

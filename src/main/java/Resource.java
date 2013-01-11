@@ -1,15 +1,18 @@
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.ws.rs.*;
+import javax.ws.rs.core.Response;
 import java.util.HashMap;
 import java.util.Map;
 
 @Path("/")
 public class Resource {
 
-    private Map<String, String> simpleGetResponses = new HashMap<>();
+    private Logger logger = LoggerFactory.getLogger(Resource.class);
 
+    private Map<String, String> simpleGetResponses = new HashMap<>();
+    
 
     public Resource() {
         simpleGetResponses.put("Quelle est ton adresse email","tometjerem@gmail.com");
@@ -27,5 +30,12 @@ public class Resource {
         }
 
         return "Vous pouvez répéter la question ?";
+    }
+
+    @POST
+    @Path("enonce/{subjectNumber}")
+    public Response postSubject(@PathParam("subjectNumber")String subjectNumber, String subjectContent) {
+        logger.info("énoncé numero {} : {}", subjectNumber,subjectContent);
+        return Response.created(null).build();
     }
 }
