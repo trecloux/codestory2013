@@ -5,6 +5,9 @@ import org.codemonkey.simplejavamail.Mailer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -16,7 +19,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
+import static java.util.Optional.empty;
+import static java.util.Optional.of;
 import static javax.mail.Message.RecipientType.TO;
 import static org.codemonkey.simplejavamail.TransportStrategy.SMTP_TLS;
 
@@ -55,38 +61,28 @@ public class BaseResource {
     public String getAnswer(@QueryParam("q") String question) {
         if (simpleGetResponses.containsKey(question)) {
             return simpleGetResponses.get(question);
-        } else if (question.matches("(\\d+) (\\d+)")) {
-            return add(question);
-        } else if (question.matches("(\\d+)\\*(\\d+)")) {
-            return multiply(question);
-        } else if (question.matches("(\\d+)-(\\d+)")) {
-            return substract(question);
-        } else if(isUnknownMailKey("question/" + question)) {
-            sendEmail("Unknown GET question", question);
-        }
+        } else {
+            Optional<String> formulaResponse = formula(question);
+            if (formulaResponse.isPresent()) {
+                return formulaResponse.get();
+            } else if(isUnknownMailKey("question/" + question)) {
+                sendEmail("Unknown GET question", question);
+            }
+    }
         return "Vous pouvez répéter la question ?";
     }
 
-    private String add(String question) {
-        String[] parts = question.split(" ");
-        int left = Integer.parseInt(parts[0]);
-        int right = Integer.parseInt(parts[1]);
-        return String.valueOf(left + right);
+    private Optional<String> formula(String question) {
+        try {
+            String formula = question.replaceAll(" ", "+");
+            ScriptEngineManager factory = new ScriptEngineManager();
+            ScriptEngine engine = factory.getEngineByName("Groovy");
+            return of(engine.eval(formula).toString());
+        } catch (ScriptException e) {
+            return empty();
+        }
     }
 
-    private String multiply(String question) {
-        String[] parts = question.split("\\*");
-        int left = Integer.parseInt(parts[0]);
-        int right = Integer.parseInt(parts[1]);
-        return String.valueOf(left * right);
-    }
-
-    private String substract(String question) {
-        String[] parts = question.split("-");
-        int left = Integer.parseInt(parts[0]);
-        int right = Integer.parseInt(parts[1]);
-        return String.valueOf(left - right);
-    }
 
     @POST
     @Path("enonce/{subjectNumber}")
