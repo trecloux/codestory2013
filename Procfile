@@ -1,1 +1,1 @@
-web:    java -cp target/classes:target/dependency/* codestory13.WebServer
+web:    java -Xmx128M -cp target/classes:target/dependency/* codestory13.WebServer
