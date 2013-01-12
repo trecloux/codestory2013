@@ -58,7 +58,7 @@ public class BaseResource {
         simpleGetResponses.put("Est ce que tu reponds toujours oui(OUI/NON)","NON");
         simpleGetResponses.put("As tu bien recu le premier enonce(OUI/NON)","OUI");
         simpleGetResponses.put("ping","OK");
-        simpleGetResponses.put("((1,1 2) 3,14 4 (5 6 7) (8 9 10)*4267387833344334647677634)/2*553344300034334349999000","3187801890382889927749202449137669070158402392688");
+        simpleGetResponses.put("((1,1 2) 3,14 4 (5 6 7) (8 9 10)*4267387833344334647677634)/2*553344300034334349999000","31878018903828899277492024491376690701584023926880");
     }
 
     @GET
