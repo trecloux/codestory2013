@@ -82,9 +82,9 @@ public class BaseResource {
             ScriptEngine engine = factory.getEngineByName("Groovy");
             Object result = engine.eval(formula);
             if (result instanceof  Number) {
-                NumberFormat format = DecimalFormat.getInstance(Locale.FRANCE);
-                format.setGroupingUsed(false);
-                return of(format.format(result));
+                double resultDouble = ((Number) result).doubleValue();
+                String resultString = (long) resultDouble == resultDouble ? "" + (long) resultDouble : "" + resultDouble;
+                return of(resultString.replace('.', ','));
             } else {
                 return of(result.toString());
             }
