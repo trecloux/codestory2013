@@ -53,6 +53,11 @@ public class IntegrationTest {
     }
 
     @Test
+    public void should_have_better_sleep() throws Exception {
+        assertThatAnswerIs("As tu passe une bonne nuit malgre les bugs de l etape precedente(PAS_TOP/BOF/QUELS_BUGS)", "BOF");
+    }
+
+    @Test
     public void should_send_email_once_on_unknown_get_question() throws Exception {
         given().port(webServer.port).param("q", "Comment je m'appelle ?").get("/");
         given().port(webServer.port).param("q", "Comment je m'appelle ?").get("/");
