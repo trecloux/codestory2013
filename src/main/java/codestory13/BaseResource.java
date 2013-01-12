@@ -1,14 +1,12 @@
 package codestory13;
 
 import com.google.common.base.Optional;
+import com.udojava.evalex.Expression;
 import org.codemonkey.simplejavamail.Email;
 import org.codemonkey.simplejavamail.Mailer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
-import javax.script.ScriptException;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -16,16 +14,16 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import static com.google.common.base.Optional.absent;
 import static com.google.common.base.Optional.of;
+import static java.util.Locale.FRANCE;
 import static javax.mail.Message.RecipientType.TO;
 import static org.codemonkey.simplejavamail.TransportStrategy.SMTP_TLS;
 
@@ -57,7 +55,6 @@ public class BaseResource {
         simpleGetResponses.put("Est ce que tu reponds toujours oui(OUI/NON)","NON");
         simpleGetResponses.put("As tu bien recu le premier enonce(OUI/NON)","OUI");
         simpleGetResponses.put("ping","OK");
-        simpleGetResponses.put("((1,1 2) 3,14 4 (5 6 7) (8 9 10)*4267387833344334647677634)/2*553344300034334349999000","31878018903828899277492024491376690701584023926880");
         simpleGetResponses.put("As tu passe une bonne nuit malgre les bugs de l etape precedente(PAS_TOP/BOF/QUELS_BUGS)","BOF");
     }
 
@@ -78,18 +75,16 @@ public class BaseResource {
     }
 
     private Optional<String> formula(String question) {
+        String formula = question.replaceAll(" ", "+").replaceAll(",", ".");
         try {
-            String formula = question.replaceAll(" ", "+").replaceAll(",",".");
-            ScriptEngineManager factory = new ScriptEngineManager();
-            ScriptEngine engine = factory.getEngineByName("Groovy");
-            Object result = engine.eval(formula);
-            if (result instanceof  Number) {
-                NumberFormat format = DecimalFormat.getInstance(Locale.FRANCE);
-                return of(format.format(result));
-            } else {
-                return of(result.toString());
+            BigDecimal result = new Expression(formula).setPrecision(50).eval();
+            try {
+                return of(result.toBigIntegerExact().toString());
+            } catch (ArithmeticException e) {
+                return of(DecimalFormat.getInstance(FRANCE).format(result));
             }
-        } catch (ScriptException e) {
+        } catch (RuntimeException e) {
+            logger.warn("Bad expression : {}", formula);
             return absent();
         }
     }
