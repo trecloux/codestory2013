@@ -16,6 +16,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -82,9 +83,17 @@ public class BaseResource {
             ScriptEngine engine = factory.getEngineByName("Groovy");
             Object result = engine.eval(formula);
             if (result instanceof  Number) {
-                double resultDouble = ((Number) result).doubleValue();
-                String resultString = (long) resultDouble == resultDouble ? "" + (long) resultDouble : "" + resultDouble;
-                return of(resultString.replace('.', ','));
+                if (result instanceof Integer) {
+                    return of(String.valueOf(result));
+                } else if (result instanceof BigDecimal) {
+                    NumberFormat format = DecimalFormat.getInstance(Locale.FRANCE);
+                    return of(format.format(result));
+                } else if (result instanceof Double) {
+                    return of(result.toString());
+                } else {
+                    logger.warn("Not handled formula result class : {}", result.getClass());
+                    return absent();
+                }
             } else {
                 return of(result.toString());
             }
