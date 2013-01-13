@@ -66,7 +66,7 @@ public class BaseResource {
                 if (formulaResponse.isPresent()) {
                     return formulaResponse.get();
                 } else if(isUnknownMailKey("question/" + question)) {
-                    sendEmail("Unknown GET question", question);
+                    sendEmail("Code Story : Unknown GET question", question);
                 }
             }
         }
@@ -95,7 +95,7 @@ public class BaseResource {
     public Response postSubject(@PathParam("subjectNumber")String subjectNumber, String subjectContent) {
         logger.info("énoncé numero {} : {}", subjectNumber,subjectContent);
         if (isUnknownMailKey("enonce/" + subjectNumber)) {
-            sendEmail("Unknown POST Subject", subjectContent);
+            sendEmail("Code Story : Unknown POST Subject", subjectContent);
         }
         return Response.created(null).build();
     }
