@@ -1,5 +1,7 @@
 package codestory13;
 
+import com.google.common.io.Resources;
+import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
 import org.codemonkey.simplejavamail.Email;
 import org.codemonkey.simplejavamail.Mailer;
@@ -7,6 +9,9 @@ import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Test;
 
+import static com.google.common.base.Charsets.UTF_8;
+import static com.google.common.io.Resources.getResource;
+import static com.jayway.restassured.RestAssured.expect;
 import static com.jayway.restassured.RestAssured.given;
 import static org.fest.assertions.Assertions.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -21,6 +26,7 @@ public class IntegrationTest {
     @Before
     public void setUp() throws Exception {
         BaseResource.mailer = mock(Mailer.class);
+        RestAssured.port = webServer.port;
     }
 
     @Test
@@ -60,15 +66,15 @@ public class IntegrationTest {
 
     @Test
     public void should_send_email_once_on_unknown_get_question() throws Exception {
-        given().port(webServer.port).param("q", "Comment je m'appelle ?").get("/");
-        given().port(webServer.port).param("q", "Comment je m'appelle ?").get("/");
+        given().param("q", "Comment je m'appelle ?").get("/");
+        given().param("q", "Comment je m'appelle ?").get("/");
         verify(BaseResource.mailer, times(1)).sendMail(any(Email.class));
     }
 
     @Test
     public void should_send_email_once_on_unknown_post_subjects() throws Exception {
-        given().port(webServer.port).body("Hey body").post("/enonce/1");
-        given().port(webServer.port).body("Hey body").post("/enonce/1");
+        given().body("Hey body").post("/enonce/1");
+        given().body("Hey body").post("/enonce/1");
         verify(BaseResource.mailer, times(1)).sendMail(any(Email.class));
     }
 
@@ -76,7 +82,7 @@ public class IntegrationTest {
     @Test
     public void should_not_fail_on_email_failure() throws Exception {
         doThrow(new RuntimeException("Plouf")).when(BaseResource.mailer).sendMail(any(Email.class));
-        given().port(webServer.port).param("q", "Comment je m'appelle ?").get("/");
+        given().param("q", "Comment je m'appelle ?").get("/");
     }
 
     @Test
@@ -87,7 +93,6 @@ public class IntegrationTest {
     @Test
     public void should_manage_to_get_enonce1_from_post() throws Exception {
                 given()
-                        .port(webServer.port)
                         .request().body("*underlined text with markdown*").
                 expect()
                         .statusCode(201).
@@ -98,19 +103,16 @@ public class IntegrationTest {
 
 
     private void assertThatAnswerIs(String question, String answer) {
-        String content =
-                given()
-                        .port(webServer.port)
-                        .param("q", question)
-                        .get("/").asString();
+        String content = given()
+            .param("q", question)
+            .get("/")
+            .asString();
         assertThat(content).isEqualTo(answer);
     }
 
     @Test
     public void should_compute_scalaskel_for_8() throws Exception {
-        given()
-                .port(webServer.port)
-        .expect()
+        expect()
                 .body("get(1).bar", equalTo(1))
                 .body("get(1).foo", equalTo(1))
                 .body("get(0).foo", equalTo(8))
@@ -146,18 +148,16 @@ public class IntegrationTest {
 
     @Test
     public void should_handle_json_from_post_request() throws Exception {
-       String message = "[{\"VOL\":\"MONAD42\",\"DEPART\":0,\"DUREE\":5,\"PRIX\":10},{\"VOL\":\"META18\",\"DEPART\":3,\"DUREE\":7,\"PRIX\":14},{\"VOL\":\"LEGACY01\",\"DEPART\":5,\"DUREE\":9,\"PRIX\":8},{\"VOL\":\"YAGNI17\",\"DEPART\":5,\"DUREE\":9,\"PRIX\":7}]";
-
+       String message = Resources.toString(getResource("sampleOrders.json"), UTF_8);
         given()
-                .port(webServer.port)
                 .contentType(ContentType.JSON)
                 .request().body(message)
         .expect()
                 .contentType(ContentType.JSON)
                 .statusCode(200)
                 .body("gain", equalTo(18))
-                .body("path.get(0)", equalTo("MONAD42"))
-                .body("path.get(1)", equalTo("LEGACY01"))
+                .body("path[0]", equalTo("MONAD42"))
+                .body("path[1]", equalTo("LEGACY01"))
         .when()
                 .post("/jajascript/optimize");
     }
@@ -165,11 +165,7 @@ public class IntegrationTest {
 
     @Test
     public void should_answer_something_on_slash() throws Exception {
-        String content =
-                given()
-                        .port(webServer.port)
-                        .get("/").asString();
+        String content = given().get("/").asString();
         assertThat(content).isEqualTo("Vous pouvez répéter la question ?");
-
     }
 }
