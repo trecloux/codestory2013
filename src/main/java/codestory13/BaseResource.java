@@ -55,7 +55,7 @@ public class BaseResource {
     public String getAnswer(@QueryParam("q") @DefaultValue("") String question) {
         return staticContent(question)
                 .or(formula(question))
-                .or(defaultResponse(question));
+                .or(() -> defaultResponse(question));
     }
 
     private Optional<String> staticContent(String question) {
