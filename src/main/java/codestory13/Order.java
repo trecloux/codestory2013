@@ -8,7 +8,6 @@ public class Order {
     @JsonProperty("DUREE") Integer duration;
     @JsonProperty("PRIX") Integer price;
 
-
     public Order() {
         super();
     }
