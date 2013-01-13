@@ -1,7 +1,8 @@
 package codestory13;
 
 import com.google.common.base.Optional;
-import com.udojava.evalex.Expression;
+import groovy.lang.GroovyRuntimeException;
+import groovy.lang.GroovyShell;
 import org.codemonkey.simplejavamail.Email;
 import org.codemonkey.simplejavamail.Mailer;
 import org.slf4j.Logger;
@@ -16,6 +17,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -77,14 +79,15 @@ public class BaseResource {
     private Optional<String> formula(String question) {
         String formula = question.replaceAll(" ", "+").replaceAll(",", ".");
         try {
-            BigDecimal result = new Expression(formula).setPrecision(50).eval();
-            try {
-                return of(result.toBigIntegerExact().toString());
-            } catch (ArithmeticException e) {
-                return of(DecimalFormat.getInstance(FRANCE).format(result));
+            Object result = new GroovyShell().evaluate(formula);
+            if (result instanceof BigDecimal) {
+                NumberFormat format = DecimalFormat.getInstance(FRANCE);
+                format.setGroupingUsed(false);
+                return of(format.format(result));
+            } else {
+                return of(result.toString());
             }
-        } catch (RuntimeException e) {
-            logger.warn("Bad expression : {}", formula);
+        } catch (GroovyRuntimeException e) {
             return absent();
         }
     }
