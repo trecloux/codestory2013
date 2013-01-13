@@ -58,16 +58,18 @@ public class BaseResource {
     @GET
     @Produces("text/plain;charset=utf-8")
     public String getAnswer(@QueryParam("q") String question) {
-        if (simpleGetResponses.containsKey(question)) {
-            return simpleGetResponses.get(question);
-        } else {
-            Optional<String> formulaResponse = formula(question);
-            if (formulaResponse.isPresent()) {
-                return formulaResponse.get();
-            } else if(isUnknownMailKey("question/" + question)) {
-                sendEmail("Unknown GET question", question);
+        if (question != null) {
+            if (simpleGetResponses.containsKey(question)) {
+                return simpleGetResponses.get(question);
+            } else {
+                Optional<String> formulaResponse = formula(question);
+                if (formulaResponse.isPresent()) {
+                    return formulaResponse.get();
+                } else if(isUnknownMailKey("question/" + question)) {
+                    sendEmail("Unknown GET question", question);
+                }
             }
-    }
+        }
         return "Vous pouvez répéter la question ?";
     }
 

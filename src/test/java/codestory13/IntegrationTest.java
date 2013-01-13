@@ -161,4 +161,15 @@ public class IntegrationTest {
         .when()
                 .post("/jajascript/optimize");
     }
+
+
+    @Test
+    public void should_answer_something_on_slash() throws Exception {
+        String content =
+                given()
+                        .port(webServer.port)
+                        .get("/").asString();
+        assertThat(content).isEqualTo("Vous pouvez répéter la question ?");
+
+    }
 }
