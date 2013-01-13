@@ -1,5 +1,6 @@
 package codestory13;
 
+import com.jayway.restassured.http.ContentType;
 import org.codemonkey.simplejavamail.Email;
 import org.codemonkey.simplejavamail.Mailer;
 import org.junit.Before;
@@ -143,4 +144,21 @@ public class IntegrationTest {
     }
 
 
+    @Test
+    public void should_handle_json_from_post_request() throws Exception {
+       String message = "[{\"VOL\":\"MONAD42\",\"DEPART\":0,\"DUREE\":5,\"PRIX\":10},{\"VOL\":\"META18\",\"DEPART\":3,\"DUREE\":7,\"PRIX\":14},{\"VOL\":\"LEGACY01\",\"DEPART\":5,\"DUREE\":9,\"PRIX\":8},{\"VOL\":\"YAGNI17\",\"DEPART\":5,\"DUREE\":9,\"PRIX\":7}]";
+
+        given()
+                .port(webServer.port)
+                .contentType(ContentType.JSON)
+                .request().body(message)
+        .expect()
+                .contentType(ContentType.JSON)
+                .statusCode(200)
+                .body("gain", equalTo(18))
+                .body("path.get(0)", equalTo("MONAD42"))
+                .body("path.get(1)", equalTo("LEGACY01"))
+        .when()
+                .post("/jajascript/optimize");
+    }
 }

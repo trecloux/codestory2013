@@ -31,7 +31,12 @@ public class WebServer {
     private void start(int port) {
         try {
             log.info("WebServer will try to start on port {} ", port);
-            httpServer = SimpleServerFactory.create("http://localhost:" + port, new DefaultResourceConfig(BaseResource.class, ScalaskelResource.class, JacksonJsonProvider.class));
+            httpServer = SimpleServerFactory.create("http://localhost:" + port,
+                    new DefaultResourceConfig(
+                            BaseResource.class,
+                            ScalaskelResource.class,
+                            JajascriptResource.class,
+                            JacksonJsonProvider.class));
             log.info("WebServer started. java.runtime.version : {}", System.getProperty("java.runtime.version"));
         } catch (IOException e) {
             log.error("Could not start WebServer", e);
