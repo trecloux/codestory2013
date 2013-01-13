@@ -32,36 +32,13 @@ public class IntegrationTest {
     @Test
     public void should_get_email() throws Exception {
         assertThatAnswerIs("Quelle est ton adresse email", "tometjerem@gmail.com");
-    }
-
-    @Test
-    public void should_have_subscribed_to_mailing_list() throws Exception {
         assertThatAnswerIs("Es tu abonne a la mailing list(OUI/NON)", "OUI");
-    }
-
-    @Test
-    public void should_be_happy() throws Exception {
         assertThatAnswerIs("Es tu heureux de participer(OUI/NON)", "OUI");
-    }
-
-    @Test
-    public void should_not_be_always_yes() throws Exception {
         assertThatAnswerIs("Est ce que tu reponds toujours oui(OUI/NON)", "NON");
-    }
-
-    @Test
-    public void should_have_received_subject_1() throws Exception {
         assertThatAnswerIs("As tu bien recu le premier enonce(OUI/NON)", "OUI");
-    }
-
-    @Test
-    public void should_ask_to_repeat_unknown_questions() throws Exception {
-        assertThatAnswerIs("Qui va gagner le superball", "Vous pouvez répéter la question ?");
-    }
-
-    @Test
-    public void should_have_better_sleep() throws Exception {
         assertThatAnswerIs("As tu passe une bonne nuit malgre les bugs de l etape precedente(PAS_TOP/BOF/QUELS_BUGS)", "BOF");
+        assertThatAnswerIs("ping", "OK");
+        assertThatAnswerIs("Qui va gagner le superball", "Vous pouvez répéter la question ?");
     }
 
     @Test
@@ -86,57 +63,30 @@ public class IntegrationTest {
     }
 
     @Test
-    public void should_ping() throws Exception {
-        assertThatAnswerIs("ping", "OK");
-    }
-
-    @Test
-    public void should_manage_to_get_enonce1_from_post() throws Exception {
-                given()
-                        .request().body("*underlined text with markdown*").
-                expect()
-                        .statusCode(201).
-                when()
-                        .post("/enonce/1");
-
-    }
-
-
-    private void assertThatAnswerIs(String question, String answer) {
-        String content = given()
-            .param("q", question)
-            .get("/")
-            .asString();
-        assertThat(content).isEqualTo(answer);
+    public void should_post_subjects() throws Exception {
+        given()
+            .request().body("*underlined text with markdown*").
+        expect()
+            .statusCode(201).
+        when()
+            .post("/enonce/1");
     }
 
     @Test
     public void should_compute_scalaskel_for_8() throws Exception {
         expect()
-                .body("get(1).bar", equalTo(1))
-                .body("get(1).foo", equalTo(1))
-                .body("get(0).foo", equalTo(8))
-        .when()
-                .get("/scalaskel/change/8");
+            .body("get(1).bar", equalTo(1))
+            .body("get(1).foo", equalTo(1))
+            .body("get(0).foo", equalTo(8))
+        .given()
+            .get("/scalaskel/change/8");
     }
 
     @Test
-    public void should_add() throws Exception {
+    public void should_compute() throws Exception {
         assertThatAnswerIs("1 1", "2");
-    }
-
-    @Test
-    public void should_multiply() throws Exception {
         assertThatAnswerIs("3*3", "9");
-    }
-
-    @Test
-    public void should_substract() throws Exception {
         assertThatAnswerIs("4-1", "3");
-    }
-
-    @Test
-    public void should_compute_formula() throws Exception {
         assertThatAnswerIs("(1 2)*2", "6");
         assertThatAnswerIs("(1+2)/2", "1,5");
         assertThatAnswerIs("((1 2) 3 4 (5 6 7) (8 9 10)*3)/2*5", "272,5");
@@ -147,8 +97,8 @@ public class IntegrationTest {
 
 
     @Test
-    public void should_handle_json_from_post_request() throws Exception {
-       String message = Resources.toString(getResource("sampleOrders.json"), UTF_8);
+    public void should_optimize_orders() throws Exception {
+        String message = Resources.toString(getResource("sampleOrders.json"), UTF_8);
         given()
                 .contentType(ContentType.JSON)
                 .request().body(message)
@@ -162,10 +112,18 @@ public class IntegrationTest {
                 .post("/jajascript/optimize");
     }
 
-
     @Test
     public void should_answer_something_on_slash() throws Exception {
         String content = given().get("/").asString();
         assertThat(content).isEqualTo("Vous pouvez répéter la question ?");
     }
+
+    private void assertThatAnswerIs(String question, String answer) {
+        String content = given()
+            .param("q", question)
+            .get("/")
+            .asString();
+        assertThat(content).isEqualTo(answer);
+    }
+
 }
