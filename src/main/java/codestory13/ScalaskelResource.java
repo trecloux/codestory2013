@@ -20,7 +20,7 @@ public class ScalaskelResource {
     @GET
     @Path("/change/{cents}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Iterable<Map<Coin, Integer>> decompose(@PathParam("cents") Integer cents) {
+    public List<Map<Coin, Integer>> decompose(@PathParam("cents") Integer cents) {
         return combinaisons(cents, asList(Coin.values()));
     }
 
