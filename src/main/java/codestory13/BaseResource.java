@@ -40,6 +40,7 @@ public class BaseResource {
         staticResponses.put("Es tu abonne a la mailing list(OUI/NON)", "OUI");
         staticResponses.put("Es tu heureux de participer(OUI/NON)", "OUI");
         staticResponses.put("Est ce que tu reponds toujours oui(OUI/NON)", "NON");
+        staticResponses.put("Es tu pret a recevoir une enonce au format markdown par http post(OUI/NON)", "OUI");
         staticResponses.put("As tu bien recu le premier enonce(OUI/NON)", "OUI");
         staticResponses.put("ping", "OK");
         staticResponses.put("As tu passe une bonne nuit malgre les bugs de l etape precedente(PAS_TOP/BOF/QUELS_BUGS)", "BOF");

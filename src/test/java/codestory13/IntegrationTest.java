@@ -41,6 +41,7 @@ public class IntegrationTest {
         assertThatAnswerIs("Qui va gagner le superball", "Vous pouvez répéter la question ?");
         assertThatAnswerIs("As tu bien recu le second enonce(OUI/NON)", "OUI");
         assertThatAnswerIs("As tu copie le code de ndeloof(OUI/NON/JE_SUIS_NICOLAS)", "NON");
+        assertThatAnswerIs("Es tu pret a recevoir une enonce au format markdown par http post(OUI/NON)", "OUI");
     }
 
     @Test
