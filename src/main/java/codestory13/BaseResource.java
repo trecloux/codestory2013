@@ -71,6 +71,14 @@ public class BaseResource {
 
     private Optional<String> formula(String question) {
         String formula = question.replaceAll(" ", "+").replaceAll(",", ".");
+        if (isFormula(formula)) {
+            return eval(formula);
+        } else {
+            return absent();
+        }
+    }
+
+    private Optional<String> eval(String formula) {
         try {
             Object result = new GroovyShell().evaluate(formula);
             if (result instanceof Number) {
@@ -83,6 +91,10 @@ public class BaseResource {
         } catch (Exception e) {
             return absent();
         }
+    }
+
+    private boolean isFormula(String formula) {
+        return formula.matches("[0-9\\+\\-/\\*\\.\\(\\)]+"); // 0-9 + - / * . ()
     }
 
 

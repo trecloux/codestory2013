@@ -119,6 +119,11 @@ public class IntegrationTest {
         assertThat(content).isEqualTo("Vous pouvez répéter la question ?");
     }
 
+    @Test
+    public void should_not_execute_arbitrary_code() throws Exception {
+        assertThatAnswerIs("println(\"pawned\");return 1;", "Vous pouvez répéter la question ?");
+    }
+
     private void assertThatAnswerIs(String question, String answer) {
         String content = given()
             .param("q", question)
