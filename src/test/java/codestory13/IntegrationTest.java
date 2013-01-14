@@ -101,7 +101,7 @@ public class IntegrationTest {
     public void should_optimize_orders() throws Exception {
         String message = Resources.toString(getResource("sampleOrders.json"), UTF_8);
         given()
-                .contentType(ContentType.JSON)
+                .contentType(ContentType.URLENC)
                 .request().body(message)
         .expect()
                 .contentType(ContentType.JSON)

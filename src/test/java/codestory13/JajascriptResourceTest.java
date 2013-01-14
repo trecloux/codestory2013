@@ -13,7 +13,7 @@ public class JajascriptResourceTest {
 
     @Test
     public void should_optimize_with_empty_orders() throws Exception {
-        OrderPath bestPath = jajascriptResource.optimize(null);
+        OrderPath bestPath = jajascriptResource.optimize((List<Order>) null);
         assertThat(bestPath).isNull();
     }
 
