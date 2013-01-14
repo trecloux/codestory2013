@@ -1,5 +1,8 @@
 package codestory13;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -12,15 +15,23 @@ import static java.util.Collections.sort;
 @Path("/jajascript/optimize")
 public class JajascriptResource {
 
+    private Logger logger = LoggerFactory.getLogger(JajascriptResource.class);
+
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public OrderPath optimize(List<Order> orders) {
+
+        logger.info("jajascript request : " + orders);
+
+
         if (orders == null) {
             return null;
         }
         sort(orders, (a, b) -> a.start.compareTo(b.start));
-        return findTheBestPath(orders, null);
+        OrderPath bestPath = findTheBestPath(orders, null);
+        logger.info(bestPath.toString());
+        return bestPath;
     }
 
     private OrderPath findTheBestPath(List<Order> orders, OrderPath bestPath) {

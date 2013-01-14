@@ -32,4 +32,9 @@ public class OrderPath {
     public List<String> getPath() {
         return path;
     }
+
+    @Override
+    public String toString() {
+        return "gain : " + gain + ", path : " + path;
+    }
 }
