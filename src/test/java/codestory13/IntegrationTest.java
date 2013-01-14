@@ -39,6 +39,7 @@ public class IntegrationTest {
         assertThatAnswerIs("As tu passe une bonne nuit malgre les bugs de l etape precedente(PAS_TOP/BOF/QUELS_BUGS)", "BOF");
         assertThatAnswerIs("ping", "OK");
         assertThatAnswerIs("Qui va gagner le superball", "Vous pouvez répéter la question ?");
+        assertThatAnswerIs("As tu bien recu le second enonce(OUI/NON)", "OUI");
     }
 
     @Test
