@@ -30,7 +30,7 @@ public class IntegrationTest {
     }
 
     @Test
-    public void should_get_email() throws Exception {
+    public void should_get_static_responses() throws Exception {
         assertThatAnswerIs("Quelle est ton adresse email", "tometjerem@gmail.com");
         assertThatAnswerIs("Es tu abonne a la mailing list(OUI/NON)", "OUI");
         assertThatAnswerIs("Es tu heureux de participer(OUI/NON)", "OUI");
@@ -40,6 +40,7 @@ public class IntegrationTest {
         assertThatAnswerIs("ping", "OK");
         assertThatAnswerIs("Qui va gagner le superball", "Vous pouvez répéter la question ?");
         assertThatAnswerIs("As tu bien recu le second enonce(OUI/NON)", "OUI");
+        assertThatAnswerIs("As tu copie le code de ndeloof(OUI/NON/JE_SUIS_NICOLAS)", "NON");
     }
 
     @Test

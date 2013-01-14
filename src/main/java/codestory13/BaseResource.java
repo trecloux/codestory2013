@@ -44,6 +44,7 @@ public class BaseResource {
         staticResponses.put("ping", "OK");
         staticResponses.put("As tu passe une bonne nuit malgre les bugs de l etape precedente(PAS_TOP/BOF/QUELS_BUGS)", "BOF");
         staticResponses.put("As tu bien recu le second enonce(OUI/NON)", "OUI");
+        staticResponses.put("As tu copie le code de ndeloof(OUI/NON/JE_SUIS_NICOLAS)", "NON");
     }
 
     static Mailer mailer;
