@@ -18,13 +18,9 @@ public class JajascriptResource {
     private Logger logger = LoggerFactory.getLogger(JajascriptResource.class);
 
     @POST
-    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public OrderPath optimize(List<Order> orders) {
-
         logger.info("jajascript request : " + orders);
-
-
         if (orders == null) {
             return null;
         }
