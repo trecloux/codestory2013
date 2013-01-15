@@ -23,8 +23,4 @@ public class Order {
     public String toString() {
         return "flight : " + flight + ", start : " + start + ", duration : " + duration + ", price : " + price;
     }
-
-    public boolean canBeChainedWith(OrderPath path) {
-        return (start + duration) <= path.firstOrder.start;
-    }
 }
