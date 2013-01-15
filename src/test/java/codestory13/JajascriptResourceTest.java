@@ -1,5 +1,7 @@
 package codestory13;
 
+import codestory13.jajascript.Order;
+import codestory13.jajascript.OrderPath;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -9,7 +11,7 @@ import static org.fest.assertions.Assertions.assertThat;
 
 public class JajascriptResourceTest {
 
-    private JajascriptResource jajascriptResource = new JajascriptResource();;
+    private JajascriptResource jajascriptResource = new JajascriptResource();
 
     @Test
     public void should_optimize_with_empty_orders() throws Exception {

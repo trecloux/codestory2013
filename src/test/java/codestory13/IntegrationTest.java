@@ -68,21 +68,21 @@ public class IntegrationTest {
     @Test
     public void should_post_subjects() throws Exception {
         given()
-            .request().body("*underlined text with markdown*").
-        expect()
-            .statusCode(201).
-        when()
-            .post("/enonce/1");
+                .request().body("*underlined text with markdown*").
+                expect()
+                .statusCode(201).
+                when()
+                .post("/enonce/1");
     }
 
     @Test
     public void should_compute_scalaskel_for_8() throws Exception {
         expect()
-            .body("get(1).bar", equalTo(1))
-            .body("get(1).foo", equalTo(1))
-            .body("get(0).foo", equalTo(8))
-        .given()
-            .get("/scalaskel/change/8");
+                .body("get(1).bar", equalTo(1))
+                .body("get(1).foo", equalTo(1))
+                .body("get(0).foo", equalTo(8))
+                .given()
+                .get("/scalaskel/change/8");
     }
 
     @Test
@@ -95,7 +95,7 @@ public class IntegrationTest {
         assertThatAnswerIs("((1 2) 3 4 (5 6 7) (8 9 10)*3)/2*5", "272,5");
         assertThatAnswerIs("1,5*4", "6");
         assertThatAnswerIs("((1,1 2) 3,14 4 (5 6 7) (8 9 10)*4267387833344334647677634)/2*553344300034334349999000", "31878018903828899277492024491376690701584023926880");
-        assertThatAnswerIs("(((1,1 2) 3,14 4 (5 6 7) (8 9 10)*4267387833344334647677634)/2*553344300034334349999000)/31878018903828899277492024491376690701584023926880",  "1");
+        assertThatAnswerIs("(((1,1 2) 3,14 4 (5 6 7) (8 9 10)*4267387833344334647677634)/2*553344300034334349999000)/31878018903828899277492024491376690701584023926880", "1");
     }
 
 
@@ -105,13 +105,13 @@ public class IntegrationTest {
         given()
                 .contentType(ContentType.URLENC)
                 .request().body(message)
-        .expect()
+                .expect()
                 .contentType(ContentType.JSON)
                 .statusCode(200)
                 .body("gain", equalTo(18))
                 .body("path[0]", equalTo("MONAD42"))
                 .body("path[1]", equalTo("LEGACY01"))
-        .when()
+                .when()
                 .post("/jajascript/optimize");
     }
 
@@ -128,10 +128,24 @@ public class IntegrationTest {
 
     private void assertThatAnswerIs(String question, String answer) {
         String content = given()
-            .param("q", question)
-            .get("/")
-            .asString();
+                .param("q", question)
+                .get("/")
+                .asString();
         assertThat(content).isEqualTo(answer);
     }
 
+    @Test
+    public void should_be_efficient() throws Exception {
+        String message = Resources.toString(getResource("complicatedOrders.json"), UTF_8);
+        given()
+                .contentType(ContentType.URLENC)
+                .request().body(message)
+        .expect()
+                .contentType(ContentType.JSON)
+                .statusCode(200)
+                .body("gain", equalTo(133))
+        .when()
+                .post("/jajascript/optimize");
+
+    }
 }

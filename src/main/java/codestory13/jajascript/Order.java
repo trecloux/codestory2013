@@ -1,4 +1,4 @@
-package codestory13;
+package codestory13.jajascript;
 
 import org.codehaus.jackson.annotate.JsonProperty;
 
