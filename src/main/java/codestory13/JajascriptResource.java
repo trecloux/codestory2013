@@ -1,5 +1,8 @@
 package codestory13;
 
+import codestory13.jajascript.JajascriptOptimizer;
+import codestory13.jajascript.Order;
+import codestory13.jajascript.OrderPath;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
 import org.slf4j.Logger;
@@ -13,12 +16,11 @@ import javax.ws.rs.core.MediaType;
 import java.io.IOException;
 import java.util.List;
 
-import static java.util.Collections.sort;
-
 @Path("/jajascript/optimize")
 public class JajascriptResource {
 
     private Logger logger = LoggerFactory.getLogger(JajascriptResource.class);
+
 
     @POST
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
@@ -37,53 +39,8 @@ public class JajascriptResource {
         if (orders == null) {
             return null;
         }
-        sort(orders, (a, b) -> a.start.compareTo(b.start));
-        OrderPath bestPath = findTheBestPath(orders, null);
-        logger.info(bestPath.toString());
+        OrderPath bestPath = new JajascriptOptimizer(orders).bestPath;
+        logger.info("Best path : {}", bestPath);
         return bestPath;
-    }
-
-    private OrderPath findTheBestPath(List<Order> orders, OrderPath bestPath) {
-        for (int i = 0; i < orders.size(); i++) {
-            OrderPath currentPath = combinePossibleOrderAndKeepTheBestPath(i, orders);
-            if (currentPath.isBetterThan(bestPath)) {
-                bestPath = currentPath;
-            }
-        }
-        return bestPath;
-    }
-
-    private OrderPath combinePossibleOrderAndKeepTheBestPath(int startingIndex, List<Order> orders) {
-        if (orders == null || orders.isEmpty()) {
-            return null;
-        }
-
-        Order startingOrder = orders.get(startingIndex);
-        OrderPath pathStartingWithStartingOrder = new OrderPath(startingOrder);
-
-        if (isLastOrder(startingIndex, orders)) {
-            return pathStartingWithStartingOrder;
-        }
-
-        Order currentOrder;
-        OrderPath bestPath = null;
-        for (int currentIndex = startingIndex + 1; currentIndex < orders.size() ; currentIndex++) {
-            currentOrder = orders.get(currentIndex);
-            OrderPath currentPath = combinePossibleOrderAndKeepTheBestPath(currentIndex, orders);
-            if (ordersCanBeChained(startingOrder, currentOrder) && currentPath.isBetterThan(bestPath)) {
-                bestPath = currentPath;
-            }
-        }
-
-        pathStartingWithStartingOrder.add(bestPath);
-        return pathStartingWithStartingOrder;
-    }
-
-    private boolean ordersCanBeChained(Order startingOrder, Order nextOrder) {
-        return nextOrder.start >= startingOrder.start + startingOrder.duration;
-    }
-
-    private boolean isLastOrder(int orderIndex, List<Order> ordersSortedByStart) {
-        return orderIndex == ordersSortedByStart.size()-1;
     }
 }

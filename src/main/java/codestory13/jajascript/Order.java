@@ -1,18 +1,18 @@
-package codestory13;
+package codestory13.jajascript;
 
 import org.codehaus.jackson.annotate.JsonProperty;
 
 public class Order {
     @JsonProperty("VOL") String flight;
-    @JsonProperty("DEPART") Integer start;
-    @JsonProperty("DUREE") Integer duration;
-    @JsonProperty("PRIX") Integer price;
+    @JsonProperty("DEPART") int start;
+    @JsonProperty("DUREE") int duration;
+    @JsonProperty("PRIX") int price;
 
     public Order() {
         super();
     }
 
-    public Order(String flight, Integer start, Integer duration, Integer price) {
+    public Order(String flight, int start, int duration, int price) {
         this.flight = flight;
         this.start = start;
         this.duration = duration;
@@ -22,5 +22,9 @@ public class Order {
     @Override
     public String toString() {
         return "flight : " + flight + ", start : " + start + ", duration : " + duration + ", price : " + price;
+    }
+
+    public boolean canBeChainedWith(OrderPath path) {
+        return (start + duration) <= path.firstOrder.start;
     }
 }

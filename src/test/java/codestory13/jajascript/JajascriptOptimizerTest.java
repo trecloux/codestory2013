@@ -1,4 +1,4 @@
-package codestory13;
+package codestory13.jajascript;
 
 import org.junit.Test;
 
@@ -7,22 +7,14 @@ import java.util.List;
 
 import static org.fest.assertions.Assertions.assertThat;
 
-public class JajascriptResourceTest {
-
-    private JajascriptResource jajascriptResource = new JajascriptResource();;
-
-    @Test
-    public void should_optimize_with_empty_orders() throws Exception {
-        OrderPath bestPath = jajascriptResource.optimize((List<Order>) null);
-        assertThat(bestPath).isNull();
-    }
+public class JajascriptOptimizerTest {
 
     @Test
     public void should_optimize_with_one_order() throws Exception {
         List<Order> orders = Arrays.asList(
                 new Order("MONAD42", 0, 5, 10));
 
-        OrderPath bestPath = jajascriptResource.optimize(orders);
+        OrderPath bestPath = optimize(orders);
 
         assertThatPathIsAsExpected(bestPath, 10, "MONAD42");
     }
@@ -33,7 +25,7 @@ public class JajascriptResourceTest {
                 new Order("flight1", 1, 2, 11),
                 new Order("flight2", 2, 2, 10));
 
-        OrderPath bestPath = jajascriptResource.optimize(orders);
+        OrderPath bestPath = optimize(orders);
 
         assertThatPathIsAsExpected(bestPath, 11, "flight1");
     }
@@ -44,7 +36,7 @@ public class JajascriptResourceTest {
                 new Order("flight2", 2, 2, 11),
                 new Order("flight1", 1, 2, 10));
 
-        OrderPath bestPath = jajascriptResource.optimize(orders);
+        OrderPath bestPath = optimize(orders);
 
         assertThatPathIsAsExpected(bestPath, 11, "flight2");
     }
@@ -54,7 +46,7 @@ public class JajascriptResourceTest {
                 new Order("flight1", 0, 1, 1),
                 new Order("flight2", 1, 2, 1));
 
-        OrderPath bestPath = jajascriptResource.optimize(orders);
+        OrderPath bestPath = optimize(orders);
 
         assertThatPathIsAsExpected(bestPath, 2, "flight1", "flight2");
     }
@@ -67,7 +59,7 @@ public class JajascriptResourceTest {
                 new Order("flight3", 2, 1, 1));
 
 
-        OrderPath bestPath = jajascriptResource.optimize(orders);
+        OrderPath bestPath = optimize(orders);
 
         assertThatPathIsAsExpected(bestPath, 3, "flight2");
     }
@@ -80,10 +72,15 @@ public class JajascriptResourceTest {
                 new Order("LEGACY01", 5, 9, 8),
                 new Order("YAGNI17", 5, 9, 7));
 
-        OrderPath bestPath = jajascriptResource.optimize(orders);
+        OrderPath bestPath = optimize(orders);
 
         assertThatPathIsAsExpected(bestPath, 18, "MONAD42", "LEGACY01");
     }
+
+    private OrderPath optimize(List<Order> orders) {
+        return new JajascriptOptimizer(orders).bestPath;
+    }
+
 
     private void assertThatPathIsAsExpected(OrderPath orderPath, int expectedGain, String... path) {
         assertThat(orderPath.gain).isEqualTo(expectedGain);
