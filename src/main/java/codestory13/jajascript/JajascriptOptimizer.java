@@ -4,9 +4,7 @@ import com.google.common.base.Stopwatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static com.google.common.collect.Iterables.getLast;
 import static java.lang.Integer.compare;
@@ -14,13 +12,12 @@ import static java.lang.Integer.compare;
 public class JajascriptOptimizer {
     private static final Logger log = LoggerFactory.getLogger(JajascriptOptimizer.class);
     public OrderPath bestPath = null;
-    private Map<Integer,OrderPath> bestPathFromHour = new HashMap<>();
-    private int maxStartHour;
+    private OrderPath[] bestPathFromHour;
 
     public JajascriptOptimizer(List<Order> orders) {
         Stopwatch stopwatch = new Stopwatch().start();
         orders.sort((a, b) -> compare(a.start, b.start));
-        maxStartHour = getLast(orders).start;
+        bestPathFromHour = new OrderPath[getLast(orders).start + 1];
         for (int i = orders.size() - 1; i >= 0; i--) {
             findBestCombinationStartingWith(i, orders);
         }
@@ -35,20 +32,18 @@ public class JajascriptOptimizer {
         if (bestSubPath.isBetterThan(bestPath)) {
             bestPath = bestSubPath;
         }
-        OrderPath bestPathStartingSameHour = bestPathFromHour.get(order.start);
+        OrderPath bestPathStartingSameHour = bestPathFromHour[order.start];
         if (bestSubPath.isBetterThan(bestPathStartingSameHour)) {
-            bestPathFromHour.put(order.start, bestSubPath);
+            bestPathFromHour[order.start] = bestSubPath;
         }
     }
 
     private OrderPath findNonOverlappingBestPath(Order order) {
-        int startingHour = order.start + order.duration;
-        while (startingHour <= maxStartHour) {
-            OrderPath path = bestPathFromHour.get(startingHour);
+        for(int hour = order.start + order.duration; hour < bestPathFromHour.length; hour++) {
+            OrderPath path = bestPathFromHour[hour];
             if (path != null) {
                 return new OrderPath(order, path);
             }
-            startingHour ++;
         }
         return new OrderPath(order, null);
     }
