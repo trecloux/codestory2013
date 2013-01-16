@@ -67,6 +67,6 @@ public class JajascriptOptimizerTest {
 
     private void assertThatPathIsAsExpected(OrderPath orderPath, int expectedGain, String... path) {
         assertThat(orderPath.gain).isEqualTo(expectedGain);
-        assertThat(orderPath.path).containsExactly(path);
+        assertThat(orderPath.getPath()).containsExactly(path);
     }
 }
