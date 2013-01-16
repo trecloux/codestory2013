@@ -119,21 +119,25 @@ public class IntegrationTest {
     @Test
     public void should_be_efficient() throws Exception {
         String message = Resources.toString(getResource("complexOrder.json"), UTF_8);
+        runComplexOptimization(message);
         long start = System.currentTimeMillis();
+        runComplexOptimization(message);
+        long duration = System.currentTimeMillis() - start;
+        System.out.println("Duration : " + duration + " ms");
+        assertThat(duration).isLessThan(100);
+    }
+
+    private void runComplexOptimization(String message) {
         given()
             .contentType(ContentType.URLENC)
             .request().body(message)
         .expect()
             .contentType(ContentType.JSON)
             .statusCode(200)
-            .body("gain", equalTo(133))
         .when()
             .post("/jajascript/optimize");
-
-        long duration = System.currentTimeMillis() - start;
-        System.out.println("Duration : " + duration + " ms");
-        assertThat(duration).isLessThan(2000);
     }
+
     @Test
     public void should_answer_something_on_slash() throws Exception {
         String content = given().get("/").asString();
