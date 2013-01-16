@@ -20,10 +20,14 @@ public class JajascriptOptimizer {
     private void findBestCombinationStartingWith(int orderIndex, List<Order> orders) {
         Order startingOrder = orders.get(orderIndex);
         OrderPath bestCombinablePath = null;
-        for (int i = orderIndex + 1; i < orders.size(); i++) {
+        for (int i = orders.size() -1; i > orderIndex; i--) {
             OrderPath orderPath = bestPathPerOrder.get(orders.get(i).flight);
-            if (orderPath.canStartWith(startingOrder) && orderPath.isBetterThan(bestCombinablePath)) {
-                bestCombinablePath = orderPath;
+            if (orderPath.canStartWith(startingOrder)) {
+                if (orderPath.isBetterThan(bestCombinablePath)) {
+                    bestCombinablePath = orderPath;
+                }
+            } else {
+                break;
             }
         }
         OrderPath bestCombinationIncludingStartingOrder = new OrderPath(startingOrder, bestCombinablePath);
