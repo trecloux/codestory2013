@@ -11,8 +11,9 @@ json.append('{ "VOL": "custom-'+i+'", "DEPART": '+i+', "DUREE": 5, "PRIX": 19}')
 json.append(']');
 
 //def http = new HTTPBuilder('http://localhost:5000/jajascript/')
-//def http = new HTTPBuilder('http://codestory2013.unchticafe.fr/jajascript/')
-def http = new HTTPBuilder('http://codestory-tometjerem.cloudfoundry.com/jajascript/');
+def http = new HTTPBuilder('http://codestory2013.unchticafe.fr/jajascript/')
+//def http = new HTTPBuilder('http://codestory-tometjerem.cloudfoundry.com/jajascript/');
+//def http = new HTTPBuilder('http://code-story-test.herokuapp.com/jajascript/');
 def start = System.currentTimeMillis();
 http.post( path: 'optimize', body: json.toString(),
            requestContentType: URLENC ) { resp ->
