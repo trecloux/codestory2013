@@ -8,48 +8,49 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.google.common.collect.Iterables.getLast;
 import static java.lang.Integer.compare;
 
 public class JajascriptOptimizer {
     private static final Logger log = LoggerFactory.getLogger(JajascriptOptimizer.class);
     public OrderPath bestPath = null;
-    private Map<String, OrderPath> bestPathPerOrder = new HashMap<>();
+    private Map<Integer,OrderPath> bestPathFromHour = new HashMap<>();
+    private int maxStartHour;
 
     public JajascriptOptimizer(List<Order> orders) {
-        Stopwatch globalwatch = new Stopwatch().start();
         Stopwatch stopwatch = new Stopwatch().start();
         orders.sort((a, b) -> compare(a.start, b.start));
-        stopwatch.stop();
-        log.info("Sort took {}", stopwatch);
-        stopwatch = new Stopwatch().start();
+        maxStartHour = getLast(orders).start;
         for (int i = orders.size() - 1; i >= 0; i--) {
             findBestCombinationStartingWith(i, orders);
-
         }
         stopwatch.stop();
-        log.info("loop took {}", stopwatch);
-        globalwatch.stop();
-        log.info("optimize took {}", globalwatch);
+        log.info("optimize took {}", stopwatch);
 
     }
 
     private void findBestCombinationStartingWith(int orderIndex, List<Order> orders) {
-        Order startingOrder = orders.get(orderIndex);
-        OrderPath bestCombinablePath = null;
-        for (int i = orders.size() -1; i > orderIndex; i--) {
-            OrderPath orderPath = bestPathPerOrder.get(orders.get(i).flight);
-            if (orderPath.canStartWith(startingOrder)) {
-                if (orderPath.isBetterThan(bestCombinablePath)) {
-                    bestCombinablePath = orderPath;
-                }
-            } else {
-                break;
-            }
+        Order order = orders.get(orderIndex);
+        OrderPath bestSubPath = findNonOverlappingBestPath(order);
+        if (bestSubPath.isBetterThan(bestPath)) {
+            bestPath = bestSubPath;
         }
-        OrderPath bestCombinationIncludingStartingOrder = new OrderPath(startingOrder, bestCombinablePath);
-        bestPathPerOrder.put(startingOrder.flight, bestCombinationIncludingStartingOrder);
-        if (bestCombinationIncludingStartingOrder.isBetterThan(bestPath)) {
-            bestPath = bestCombinationIncludingStartingOrder;
+        OrderPath bestPathStartingSameHour = bestPathFromHour.get(order.start);
+        if (bestSubPath.isBetterThan(bestPathStartingSameHour)) {
+            bestPathFromHour.put(order.start, bestSubPath);
         }
     }
+
+    private OrderPath findNonOverlappingBestPath(Order order) {
+        int startingHour = order.start + order.duration;
+        while (startingHour <= maxStartHour) {
+            OrderPath path = bestPathFromHour.get(startingHour);
+            if (path != null) {
+                return new OrderPath(order, path);
+            }
+            startingHour ++;
+        }
+        return new OrderPath(order, null);
+    }
+
 }

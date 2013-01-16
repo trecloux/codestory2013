@@ -4,14 +4,14 @@ import static groovyx.net.http.ContentType.URLENC
 
 def StringBuffer json = new StringBuffer('[');
 def int i=1;
-for (;i<50000;i++) {
+for (;i<2200000;i++) {
     json.append('{ "VOL": "custom-'+i+'", "DEPART": '+i+', "DUREE": 5, "PRIX": 19},');
 }
 json.append('{ "VOL": "custom-'+i+'", "DEPART": '+i+', "DUREE": 5, "PRIX": 19}');
 json.append(']');
 
-//def http = new HTTPBuilder('http://localhost:5000/jajascript/')
-def http = new HTTPBuilder('http://codestory2013.unchticafe.fr/jajascript/')
+def http = new HTTPBuilder('http://localhost:5000/jajascript/')
+//def http = new HTTPBuilder('http://codestory2013.unchticafe.fr/jajascript/')
 //def http = new HTTPBuilder('http://codestory-tometjerem.cloudfoundry.com/jajascript/');
 //def http = new HTTPBuilder('http://code-story-test.herokuapp.com/jajascript/');
 def start = System.currentTimeMillis();
