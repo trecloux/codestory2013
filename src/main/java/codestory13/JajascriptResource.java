@@ -35,12 +35,12 @@ public class JajascriptResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public OrderPath optimize(List<Order> orders) {
-        logger.info("jajascript request : " + orders);
+        logger.info("Number of orders: {}", orders.size());
         if (orders == null) {
             return null;
         }
         OrderPath bestPath = new JajascriptOptimizer(orders).bestPath;
-        logger.info("Best path : {}", bestPath);
+        logger.info("Best path gain : {}", bestPath.gain);
         return bestPath;
     }
 }
