@@ -8,41 +8,28 @@ import static java.lang.Integer.compare;
 
 public class JajascriptOptimizer {
     public OrderPath bestPath = null;
-    private Map<String, OrderCombination> bestCombinationPerOrder = new HashMap<>();
-    private OrderCombination bestCombination = null;
+    private Map<String, OrderPath> bestPathPerOrder = new HashMap<>();
 
     public JajascriptOptimizer(List<Order> orders) {
         orders.sort((a, b) -> compare(a.start, b.start));
         for (int i = orders.size() - 1; i >= 0; i--) {
             findBestCombinationStartingWith(i, orders);
         }
-        bestPath = bestCombination.getOrderPath();
     }
 
     private void findBestCombinationStartingWith(int orderIndex, List<Order> orders) {
         Order startingOrder = orders.get(orderIndex);
-        OrderCombination bestCombinableCombination = null;
-
+        OrderPath bestCombinablePath = null;
         for (int i = orderIndex + 1; i < orders.size(); i++) {
-            OrderCombination orderCombination = bestCombinationPerOrder.get(orders.get(i).flight);
-            if (orderCombination.canStartWith(startingOrder) && orderCombination.isBetterThan(bestCombinableCombination)) {
-                bestCombinableCombination = orderCombination;
+            OrderPath orderPath = bestPathPerOrder.get(orders.get(i).flight);
+            if (orderPath.canStartWith(startingOrder) && orderPath.isBetterThan(bestCombinablePath)) {
+                bestCombinablePath = orderPath;
             }
         }
-
-        OrderCombination bestCombinationIncludingStartingOrder = createNewCombination(startingOrder, bestCombinableCombination);
-        bestCombinationPerOrder.put(startingOrder.flight, bestCombinationIncludingStartingOrder);
-
-        if (bestCombinationIncludingStartingOrder.isBetterThan(bestCombination)) {
-            bestCombination = bestCombinationIncludingStartingOrder;
+        OrderPath bestCombinationIncludingStartingOrder = new OrderPath(startingOrder, bestCombinablePath);
+        bestPathPerOrder.put(startingOrder.flight, bestCombinationIncludingStartingOrder);
+        if (bestCombinationIncludingStartingOrder.isBetterThan(bestPath)) {
+            bestPath = bestCombinationIncludingStartingOrder;
         }
-
     }
-
-    private OrderCombination createNewCombination(Order startingOrder, OrderCombination orderCombinationToAppend) {
-        OrderCombination newOrderCombination = new OrderCombination();
-        newOrderCombination.add(startingOrder, orderCombinationToAppend);
-        return newOrderCombination;
-    }
-
 }

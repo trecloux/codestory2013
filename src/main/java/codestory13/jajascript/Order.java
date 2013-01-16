@@ -8,9 +8,7 @@ public class Order {
     @JsonProperty("DUREE") int duration;
     @JsonProperty("PRIX") int price;
 
-    public Order() {
-        super();
-    }
+    public Order() {}
 
     public Order(String flight, int start, int duration, int price) {
         this.flight = flight;
