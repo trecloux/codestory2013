@@ -1,7 +1,6 @@
 @Grab(group='org.codehaus.groovy.modules.http-builder', module='http-builder', version='0.6')
 import groovyx.net.http.HTTPBuilder
 
-import static groovyx.net.http.ContentType.JSON
 import static groovyx.net.http.ContentType.URLENC
 import static java.lang.Integer.parseInt
 
@@ -17,7 +16,7 @@ private void callServer(String url, String requestPayload) {
     def http = new HTTPBuilder(url)
     def start = System.currentTimeMillis();
     http.post(path: 'optimize', body: requestPayload.toString(),
-            requestContentType: JSON) { resp, jsonResp ->
+            requestContentType: URLENC) { resp, jsonResp ->
 
         def duration = System.currentTimeMillis() - start
         println "Response time ${duration} ms"
