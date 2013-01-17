@@ -117,6 +117,22 @@ public class IntegrationTest {
     }
 
     @Test
+    public void should_optimize_orders_with_overlap() throws Exception {
+        String message = Resources.toString(getResource("withOverlap.json"), UTF_8);
+        given()
+                .contentType(ContentType.URLENC)
+                .request().body(message)
+        .expect()
+                .contentType(ContentType.JSON)
+                .statusCode(200)
+                .body("gain", equalTo(54))
+        .when()
+            .post("/jajascript/optimize");
+
+    }
+
+
+    @Test
     public void should_be_efficient() throws Exception {
         String message = Resources.toString(getResource("complexOrder.json"), UTF_8);
         runComplexOptimization(message);

@@ -28,18 +28,32 @@ public class JajascriptOptimizer {
 
     private void findBestCombinationStartingWith(int orderIndex, List<Order> orders) {
         Order order = orders.get(orderIndex);
-        OrderPath bestSubPath = findNonOverlappingBestPath(order);
-        if (bestSubPath.isBetterThan(bestPath)) {
-            bestPath = bestSubPath;
+        OrderPath bestStartingWith = bestStartingWith(order);
+        OrderPath bestStartingDuring = bestStartingDuring(order);
+        if (bestStartingWith.isBetterThan(bestPath)) {
+            bestPath = bestStartingWith;
         }
+        if (bestStartingWith.isBetterThan(bestStartingDuring)) {
         OrderPath bestPathStartingSameHour = bestPathFromHour[order.start];
-        if (bestSubPath.isBetterThan(bestPathStartingSameHour)) {
-            bestPathFromHour[order.start] = bestSubPath;
+            if (bestStartingWith.isBetterThan(bestPathStartingSameHour)) {
+                bestPathFromHour[order.start] = bestStartingWith;
+            }
         }
     }
 
-    private OrderPath findNonOverlappingBestPath(Order order) {
-        for(int hour = order.start + order.duration; hour < bestPathFromHour.length; hour++) {
+    private OrderPath bestStartingDuring(Order order) {
+        OrderPath bestStartingDuring = null;
+        for(int hour = order.start; (hour < order.start+order.duration) && (hour <bestPathFromHour.length ); hour++) {
+            OrderPath path = bestPathFromHour[hour];
+            if (path != null && bestPath.isBetterThan(bestStartingDuring)) {
+                bestStartingDuring = path;
+            }
+        }
+        return bestStartingDuring;
+    }
+
+    private OrderPath bestStartingWith(Order order) {
+        for(int hour = order.start +order.duration ; hour < bestPathFromHour.length; hour++) {
             OrderPath path = bestPathFromHour[hour];
             if (path != null) {
                 return new OrderPath(order, path);
