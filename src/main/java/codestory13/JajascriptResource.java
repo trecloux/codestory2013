@@ -27,6 +27,7 @@ public class JajascriptResource {
     @Produces(MediaType.APPLICATION_JSON)
     public OrderPath optimize(String body) throws IOException {
         List<Order> orders = new ObjectMapper().readValue(body, new TypeReference<List<Order>>() { });
+        if (orders != null && orders.size() <= 100) logger.info("String body : {}", body);
         return optimize(orders);
     }
 
@@ -40,6 +41,7 @@ public class JajascriptResource {
         }
         logger.info("Number of orders: {}", orders.size());
         OrderPath bestPath = new JajascriptOptimizer(orders).bestPath;
+        if (orders.size() <= 100) logger.info("Best path : {}", bestPath.getPath());
         logger.info("Best path gain : {}", bestPath.gain);
         return bestPath;
     }
