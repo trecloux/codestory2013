@@ -149,6 +149,14 @@ public class IntegrationTest {
         assertThatAnswerIs("println(\"pawned\");return 1;", "Vous pouvez répéter la question ?");
     }
 
+    @Test
+    public void should_get_404() throws Exception {
+        expect()
+                .statusCode(404)
+        .when()
+                .get("/favicon.ico");
+    }
+
     private void assertThatAnswerIs(String question, String answer) {
         String content = given()
             .param("q", question)
