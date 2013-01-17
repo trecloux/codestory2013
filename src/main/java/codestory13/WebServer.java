@@ -5,6 +5,9 @@ import com.sun.jersey.simple.container.SimpleServerFactory;
 import org.codehaus.jackson.jaxrs.JacksonJsonProvider;
 import org.slf4j.Logger;
 
+import javax.ws.rs.core.Response;
+import javax.ws.rs.ext.ExceptionMapper;
+import javax.ws.rs.ext.Provider;
 import java.io.Closeable;
 import java.io.IOException;
 
@@ -36,7 +39,8 @@ public class WebServer {
                             BaseResource.class,
                             ScalaskelResource.class,
                             JajascriptResource.class,
-                            JacksonJsonProvider.class));
+                            JacksonJsonProvider.class,
+                            CatchAllExceptions.class));
             log.info("WebServer started. java.runtime.version : {}", System.getProperty("java.runtime.version"));
         } catch (IOException e) {
             log.error("Could not start WebServer", e);
@@ -60,4 +64,15 @@ public class WebServer {
         }
     }
 
+    @Provider
+    public static class CatchAllExceptions implements ExceptionMapper<Throwable> {
+
+        private static final Logger log = getLogger(CatchAllExceptions.class);
+
+        @Override
+        public Response toResponse(Throwable exception) {
+            log.error("Resource has throw an exception", exception);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Oups ...").build();
+        }
+    }
 }
