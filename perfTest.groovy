@@ -7,9 +7,9 @@ import static java.lang.Integer.parseInt
 
 def url = urlParam()
 println("Url : ${url}")
-def size = sizeParam()
-println("Size : ${size}" )
-def payload = buildJsonRequest(size)
+def orderSize = orderSizeParam()
+println("Order size : ${orderSize}" )
+def payload = buildJsonRequest(orderSize)
 callServer(url, payload)
 
 
@@ -39,10 +39,12 @@ private String buildJsonRequest(int size) {
         }
     }
     json.append(']')
-    json.toString();
+    jsonAsString = json.toString();
+    println("JSon payload is ready. Size of the payload: ${jsonAsString.length()}")
+    jsonAsString
 }
 
-private int sizeParam() {
+private int orderSizeParam() {
     if (args.length == 0) {
         return 100000
     } else if (args.length == 1) {
