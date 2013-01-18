@@ -29,7 +29,7 @@ public class JajascriptOptimizer {
     private void findBestCombinationStartingWith(int orderIndex, List<Order> orders) {
         Order order = orders.get(orderIndex);
         OrderPath bestStartingWith = bestStartingWith(order);
-        OrderPath bestStartingDuring = bestStartingDuring(order);
+        OrderPath bestStartingDuring = bestPathStartingDuringTheFlight(order);
         if (bestStartingWith.isBetterThan(bestPath)) {
             bestPath = bestStartingWith;
         }
@@ -41,9 +41,10 @@ public class JajascriptOptimizer {
         }
     }
 
-    private OrderPath bestStartingDuring(Order order) {
+    private OrderPath bestPathStartingDuringTheFlight(Order order) {
         OrderPath bestStartingDuring = null;
-        for(int hour = order.start; (hour < order.start+order.duration) && (hour <bestPathFromHour.length ); hour++) {
+        int flightEnd = order.start + order.duration;
+        for(int hour = order.start; (hour < flightEnd) && (hour <bestPathFromHour.length ); hour++) {
             OrderPath path = bestPathFromHour[hour];
             if (path != null && bestPath.isBetterThan(bestStartingDuring)) {
                 bestStartingDuring = path;
@@ -53,7 +54,8 @@ public class JajascriptOptimizer {
     }
 
     private OrderPath bestStartingWith(Order order) {
-        for(int hour = order.start +order.duration ; hour < bestPathFromHour.length; hour++) {
+        int flightEnd = order.start + order.duration;
+        for(int hour = flightEnd; hour < bestPathFromHour.length; hour++) {
             OrderPath path = bestPathFromHour[hour];
             if (path != null) {
                 return new OrderPath(order, path);
