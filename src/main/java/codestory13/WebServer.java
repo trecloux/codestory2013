@@ -76,8 +76,7 @@ public class WebServer {
             if (exception instanceof WebApplicationException) {
                 return ((WebApplicationException) exception).getResponse();
             } else {
-                // do not log stack trace, heroku breaks stack order
-                log.error("Resource has throw an exception", exception.getMessage());
+                log.error("Resource has throw an exception", exception);
                 return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Oups ...").build();
             }
         }
