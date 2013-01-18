@@ -11,30 +11,34 @@ import org.slf4j.LoggerFactory;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.util.List;
+
+import static javax.ws.rs.core.Response.Status.BAD_REQUEST;
 
 @Path("/jajascript/optimize")
 public class JajascriptResource {
 
     private Logger logger = LoggerFactory.getLogger(JajascriptResource.class);
 
-
     @POST
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    @Produces(MediaType.APPLICATION_JSON)
-    public OrderPath optimize(String body) throws IOException {
-        List<Order> orders = new ObjectMapper().readValue(body, new TypeReference<List<Order>>() { });
-        if (orders != null && orders.size() <= 100) logger.info("String body : {}", body);
-        return optimize(orders);
+    public Response optimize(String body) throws IOException {
+        if (body.isEmpty()) {
+            logger.info("Received an empty body");
+            return Response.status(BAD_REQUEST).entity("Empty body").build();
+        } else {
+            List<Order> orders = new ObjectMapper().readValue(body, new TypeReference<List<Order>>() { });
+            if (orders != null && orders.size() <= 100) logger.info("String body : {}", body);
+            return Response.ok(orders, MediaType.APPLICATION_JSON).build();
+        }
     }
 
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
     public OrderPath optimize(List<Order> orders) {
         if (orders == null) {
             return null;

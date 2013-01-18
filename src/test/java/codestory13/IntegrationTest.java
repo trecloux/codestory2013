@@ -131,6 +131,19 @@ public class IntegrationTest {
 
     }
 
+    @Test
+    public void should_return_bad_request_on_empty_body() throws Exception {
+        given()
+            .contentType(ContentType.URLENC)
+            .request()
+        .expect()
+            .statusCode(400)
+        .when()
+            .post("/jajascript/optimize");
+
+    }
+
+
 
     @Test
     public void should_be_efficient() throws Exception {
