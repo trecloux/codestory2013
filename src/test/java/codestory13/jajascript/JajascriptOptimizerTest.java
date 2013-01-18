@@ -81,7 +81,7 @@ public class JajascriptOptimizerTest {
         for (int i=1; i<=20; i++) {
             List<Order> orders = randomOrders(random.nextInt(10_000));
             oldImplWatch.start();
-            OrderPath bestPathOld = new JavascriptOldOptimizer(new ArrayList(orders)).bestPath;
+            OrderPath bestPathOld = new JajascriptOldOptimizer(new ArrayList(orders)).bestPath;
             oldImplWatch.stop();
             newImplWatch.start();
             OrderPath bestPathNew = new JajascriptOptimizer(new ArrayList<>(orders)).bestPath;
@@ -112,11 +112,11 @@ public class JajascriptOptimizerTest {
         assertThat(orderPath.getPath()).containsExactly(path);
     }
 
-    public static class JavascriptOldOptimizer {
+    public static class JajascriptOldOptimizer {
         public OrderPath bestPath = null;
         private Map<String, OrderPath> bestPathPerOrder = new HashMap<>();
 
-        public JavascriptOldOptimizer(List<Order> orders) {
+        public JajascriptOldOptimizer(List<Order> orders) {
             Stopwatch stopwatch = new Stopwatch().start();
             orders.sort((a, b) -> compare(a.start, b.start));
             for (int i = orders.size() - 1; i >= 0; i--) {
