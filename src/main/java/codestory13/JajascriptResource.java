@@ -32,7 +32,7 @@ public class JajascriptResource {
         } else {
             List<Order> orders = new ObjectMapper().readValue(body, new TypeReference<List<Order>>() { });
             if (orders != null && orders.size() <= 100) logger.info("String body : {}", body);
-            return Response.ok(orders, MediaType.APPLICATION_JSON).build();
+            return Response.ok(optimize(orders), MediaType.APPLICATION_JSON).build();
         }
     }
 
