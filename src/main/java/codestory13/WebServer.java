@@ -44,8 +44,6 @@ public class WebServer {
     }
 
     private void start(int port) {
-        java.util.logging.Logger.getLogger("").addHandler(new java.util.logging.ConsoleHandler());
-        java.util.logging.Logger.getLogger("com.sun.jersey").setLevel(java.util.logging.Level.FINEST);
         try {
             log.info("WebServer will try to start on port {} ", port);
             httpServer = SimpleServerFactory.create("http://localhost:" + port,
