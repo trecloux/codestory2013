@@ -29,11 +29,11 @@ private void callServer(String url, String requestPayload) {
 private String buildJsonRequest(int size) {
     def random = new Random();
     def json = new StringBuffer('[')
-    for (int i=0; i < size; i++) {
+    for (int i in 1..size) {
         def duration = random.nextInt(10) +1
         def price = random.nextInt(25) +1
         json.append('{"VOL":"custom-' + i + '","DEPART":' + i + ',"DUREE":' + duration + ',"PRIX": '+ price +'}')
-        if (i < (size-1)) {
+        if (i < (size)) {
             json.append(',')
         }
     }
