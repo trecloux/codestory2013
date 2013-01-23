@@ -74,7 +74,8 @@ public class BaseResource {
     private Optional<String> formula(String question) {
         String formula = question.replaceAll(" ", "+").replaceAll(",", ".");
         if (isFormula(formula)) {
-            return eval(formula);
+            Optional<String> eval = eval(formula);
+            return eval;
         } else {
             return absent();
         }
@@ -85,6 +86,7 @@ public class BaseResource {
             Object result = new GroovyShell().evaluate(formula);
             if (result instanceof Number) {
                 NumberFormat format = DecimalFormat.getInstance(FRANCE);
+                format.setMaximumFractionDigits(100);
                 format.setGroupingUsed(false);
                 return of(format.format(result));
             } else {
