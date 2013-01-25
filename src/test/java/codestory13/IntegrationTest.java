@@ -42,6 +42,7 @@ public class IntegrationTest {
         assertThatAnswerIs("As tu bien recu le second enonce(OUI/NON)", "OUI");
         assertThatAnswerIs("As tu copie le code de ndeloof(OUI/NON/JE_SUIS_NICOLAS)", "NON");
         assertThatAnswerIs("Es tu pret a recevoir une enonce au format markdown par http post(OUI/NON)", "OUI");
+        assertThatAnswerIs("Souhaites-tu-participer-a-la-suite-de-Code-Story(OUI/NON)", "OUI");
     }
 
     @Test
